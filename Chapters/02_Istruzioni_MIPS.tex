@@ -1,0 +1,31 @@
+\chapter{Le istruzioni MIPS}
+Le parole del linguaggio del calcolatore sono dette istruzioni e l'intero vocabolario isieme delle istruzioni, interpretati dall'alto al basso. La semplicit\`a dei dispositivi 
+\`e un parametro di grande valore per i caclolatori. Un programma \`e un insieme di istruzioni che viene memorizzato come numeri interpretati dalla macchina come istruzioni.
+Le operazioni aritmetiche contengono sempre tre elementi, il primo il luogo in cui viene salvato il risultato e gli altri due i due elementi. Questa descrizione permette di 
+mantenere l'hardware semplice. 
+\section{Gli operando dell'hardware del calcolatore}
+Le istruzioni aritmetiche del MIPS possono essere svolte tra un numero limitato di locazioni particolari: i registri, che rappresentano le primitive utilizzate nella 
+prograttazione dell'hardware: i registri. Nei calcolatori della classe dei MIPS sono presenti $32$ registri in quanto minori dimensioni implicano maggiore velocit\`a. Per
+questo i tre operandi delle istruzioni aritmetiche devono essere scelti tra i $32$ registri a $32$ bit. Strutture dati pi\`u complesse possono contenere un numero di elementi
+maggiore degli elementi presenti nel calcolatore e di conseguenza vengono allocate in memoria. Si rendono pertanto necessari delle istruzioni di trasfermiento che interagiscano
+tra la memoria e i registri. Per questo l'istruzione deve contenere l'indirizzo di memoria corrispondente al dato. La memoria pu\`o essere considerata un vettore 
+monodimensionale. Attraverso l'istruzione di load viene caricato un valore da memoria a registro. L'indirizzo del dato in memoria vene ottenuto dalla somma della costanto e del
+contenuto del secondo registro. L'indirizzo di due parole consecutive differisce di quattro unit\`a. L'operazione complementare, che dal registro salva in memoria si chiama 
+store ed ha sintassi simile. I registri richiedono un tempo di accesso minore rispetto alla memoria e pertanto aumentano il throughput. Per evitare l'operazione di load una 
+versione delle istruzioni aritmetiche permette di fare un'operazione tra un registro e una costante. L'operazione di spostamento di due registri richiede la somma con la 
+costante zero, che per questo viene sempre contenuta nel registro \emph{\$zero}.
+\section{Numeri con e senza segno}
+I numeri vengono rappresentati in base $2$ con una sequenza di segnali elettrici alti o bassi e il valore della $i$-esima cifra $d$ \`e $d\cdot mBase^i$, dove $i$ assume un 
+valore da $0$ e viene incrementato spostandosi verso sinistra. Queste combinazioni di bit sono rappresentazioni di numeri. \`E possibile progettare un circuito logico che svolga
+le operazioni aritmetiche con questi numeri, se il risultato di questa operazione supera i bit disponibili avviene un overflow.
+\subsection{Numeri con segno}
+Una rappresentazione dei numeri con segno \`e data dalla rappresentazione modulo e segno, ovvero un bit, solitamente l'ultimo viene riservato per il segno: 0 se positivo 1 se 
+negativo. Presenta degli svantaggi di efficienza e contiene due zeri. Viene pertanto utilizzata la rappresentazione in complemento a 2, ovvero la met\`a dei numeri da $0$ a $2^{31}-1$ utilizza la rappresentazione precedente, mentre da quel numero in poi sono rappresentati i numeri negativi crescenti. Pertanto i numeri positivi presentano degli zeri
+iniziali, mentre i negativi degli uni e si ha un solo zero. Il bit di segno, ovvero quello pi\`u significativo, viene moltiplicato per $-2^{31}$. La condizione di overflow si 
+verifica quando il bit pi\`u a sinistra non \`e uguale agli infniti bit alla sua sinistra, ovvero quando il bit di segno non \`e corretto. Il bit di segno viene ripetuto fino
+a riempire tutti i bit disponibili. Pertanto si utilizza \emph{lb} per caricare un numero con segno e \emph{lbu} per un byte con un numero senza segno. Per invertire il segno
+di un numero si invertono tutti i bit e si somma poi 1. Per estendere il segno si riempie a sinistra del valore del bit di segno. Con il complemento a uno non si aggiunge a uno
+al numero quando si cambia di segno. 
+\section{Le istruzioni nel calcolatore}
+Le istruzioni del calcolatore sono memorizzate come una sequenza di segnali che possono pertanto essere rappresentate come numeri. Dato che i registri vengono indirizzati dalle
+istruzioni si deve assegnare un numero ad ogni registro. 

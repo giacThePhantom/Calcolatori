@@ -1,0 +1,54 @@
+\chapter{Toolchain}
+La toolchain \`e lo strumento necessario a tradurre il codice scritto in linguaggio di alto livello in linguaggio macchina: per esempio nel C ci sono quattro componenti
+che permettono questa traduzione:
+\begin{enumerate}
+\item Preprocessore: gestisce le direttive \# (come include o define) sostituendo pezzi di codice ed eliminando i commenti. 
+\item Compilatore: traduce il codice da C ad Assembly (.s).
+\item Assembler: traduce da assembly a linguaggio macchina (.o).
+\item Linker: collega tra loro diversi file .o per linkare al file oggetto librerie o altri file .o e produce un eseguibile. 
+\end{enumerate}
+L'eseguibile successivamente viene chiamato in memoria attraverso una system call per essere eseguito. 
+\section{Da codice sorgente a eseguibile}
+\subsection{Da codice sorgente a file oggetto}
+Quando viene compilato il codice sorgente e trasformato in assembly questo viene ottimizzato e semplificato in modo da essere pi\`u performante e leggero. 
+Successivamente il file assembly viene trasformato in un file oggetto. Durante questo passaggio le pseudo istruzioni vengono convertite in istruzioni standard, le 
+istruzioni assembly in linguaggio macchina, tutti i numeri in binario le label tradotte in indirizzi, vengono gestiti i salti (se l'indirizzo non pu\`o essere contenuto 
+dal campo j si passa ad un jr), vengono creati i metadati, le informazioni di alto livello che serviranno al loader per caricare il codice binario. Dopo aver completato 
+queste operazioni il file oggetto contiene:
+\begin{itemize}
+\item Header: contiene dati come le posizioni degli altri dati all'interno del file.
+\item Segmenti: contiene codice e dati come le variabili globali.
+\item Tabella di rilocazione: contiene tutti i simboli con indirizzo relativo alla posizione nell'area .data e tipo di istruzione.
+\item Tabella dei simboli: contiene tutti i simboli undefined non contenuti nel file oggetto e simboli definiti con indirizzo assoluto.
+\item Altre informazioni come per esempio per il debugging. 
+\end{itemize}
+\subsection{Da file oggetto a eseguibile}
+Durante questa traduzione viene deciso come codice e dati sono disposti in memoria compattando tra loro le sezioni con funzioni uguali, vengono associati indirizzi 
+assoluti a tutti i simboli anche non locali, patcha le istruzioni di salto dopo che gli indirizzi sono stati modificati durante la prima fase della traduzione. Vengono
+pertanto eliminate le tabelle dei simboli e di rilocazione sostituendo tutti gli indirizzi con indirizzi assoluti. Per fare ci\`o si potrebbe necessitare di collegare
+tra loro pi\`u file .o. Durante questo processo si trovano tre tipi di simboli:
+\begin{enumerate}
+\item Locali definiti e visibili solamente all'interno del file.
+\item Definiti associati ad un indirizzo relativo nella tabella dei simboli ma definiti all'interno del file stesso.
+\item Non definiti presenti nella tabella dei simboli ma definiti in un file diverso. 
+\end{enumerate}
+\subsubsection{Linking}
+Durante il linking vengono disposti in memoria i vari segmenti riordinandoli, ovvero prendendo tutte le parti .text nei file .o linkati e unificandole e con tutte le
+altre sezioni, in modo da avere un unico file che contiene tutto il codice necessario e che sia strutturalmente ordinato. Successivamente si assegna un indirizzo 
+assoluto ad ogni simbolo presente nella tabella dei simboli, facendo attenzione alla modifica degli indirizzi relativi che avviene nel primo passaggio. Alla fine si 
+modificano tutte le istruzioni con gli indirizzi appena calcolati, sistemando tutti i simboli nella tabella di rilocazione. Il file risultante viene incapsulato in un 
+eseguibile che conterr\`a i vari segmenti, informazioni per il caricamento in memoria e informazioni aggiuntive per il debugging. 
+\section{Librerie}
+Data la complessit\`a dei programmi si \`e reso necessario l'uso di librerie, collezioni di file .o per funzioni gi\`a create. Si dividono in:
+\begin{itemize}
+\item Librerie statiche (.a): collezioni di file .o. Il linker linka l'intera libreria. Dispendioso dal punto di vista della memoria, ma la fase di esecuzione risulta 
+semplice.
+\item Librerie dinamiche (.so): il linking avviene durante il caricamento ed esecuzione: la libreria pu\`o essere consultata a runtime. L'eseguibile rimane leggero, ma
+presenta delle difficolt\`a di implementazione. 
+\end{itemize}
+\subsection{Librerie dinamiche}
+Al momento del linking non viene linkata la libreria, ma solo dei riferimenti ad essa, e un riferimento ad un linker dinamico che viene caricato ed eseguito al momento
+dell'esecuzione passandogli come argomento il programma. Sar\`a tale linker a linkare le librerie quando necessario. Oltre ad un eseguibile leggero permette di 
+modularizzare il codice in modo che la ricompilazione non sia necessaria in caso di aggiornamento di una libreria. Il processo di caricamento diventa per\`o complesso.
+Si pu\`o effettuare un lazy linking, in cui il linking viene effettuato solo quando strettamente necessario. In questa strategia invece dell'indirizzo della libreria
+viene inserito uno stub che solo se invocato va a linkare la libreria. 

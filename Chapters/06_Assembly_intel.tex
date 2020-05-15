@@ -1,0 +1,56 @@
+\chapter{Assembly intel}
+Si basa su un'architettura CISC
+\section{Gestione dei registri}
+Per indicare un registro si prepone \%, per un valore immediato \$.Intel posside 16 registri a 64 bit general purpose: \%rax, \%rbx, \%rcx, \%rdx, \%rsi, \%rdi, \%r8, 
+\%r9, \%r10, \%r11, \%r12, \%r13, \%r14, \%r15, \%rbp il frame pointer e \%rsp lo stack pointer. Per accedere ai 32 bit meno significativi si sostituisce r con e, per 
+accedere ai 16 meno significativi si omette r, di questi 16 per accedere agli 8 pi\`u significatisi si prepone h, ai meno significativi l. Si trovano inoltre due registri 
+specializzati: \%rip instrucion pointer (program counter) e \%rflags, ovvero il registro per i flags. 
+\section{Convezioni di chiamata}
+Il passaggio di parametri di una funzione \`e considerato da 6 registri: \%rsi, \%rdi, \%rcx, \%rdx, \%r8, \%r9, mentre ulteriori argomenti possono essere salvati sullo
+stack. I valori di ritorno vengono salvati nei registri \%rax e \%rdx. I registri da preservare sono: \%rbp, \%rbx, \%r12, \%r13, \%r14, \%r15. Esistono due modalit\`a
+per richiamare una funzione attraverso l'istruzione call: call address che chiama la subroutine all'indirizzo indicato e call *register che chiama la funzione 
+all'indirizzo contenuto nel registro indicato. Il link register viene salvato automaticamente sullo stack, facilitando le funzioni ricorsive. L'istruzione ret preleva
+dallo stack l'indirizzo di ritorno da utilizzare nell'instrucion pointer. 
+\section{Modalit\`a di indirizzamento}
+Esistono varie modalit\`a di indirizzamento in Intel:
+\begin{itemize}
+\item $<$displacement$>$
+\item [$<$displacement$>$]($<$base register$>$)
+\item [$<$displacement$>$]($<$index register$>$, [$<$scale$>$])
+\item [$<$displacement$>$]($<$index register$>$, $<$base register$>$, [$<$scale$>$])
+\end{itemize}
+L'indirizzo di memoria corrispondente viene calcolato come $<$displacement$>+<$base$>+<$index$>\cdot<$scale$>$. Dove displacement \`e una costante a 8, 16, 32 o 64 bit, 
+index e base sono indirizzi e scale \`e 1, 2, 4 o 8.
+\section{Sintassi istruzioni}
+Le istruzioni si presentano nella forma $<$opcode$>$[$<$size$>$]$<$source$>$, $<$destination$>$, dove il secondo elemento \`e sia operando che destinazione e deve essere
+un registro o un indirizzo di memoria. Il primo pu\`o essere un valore immediato. I due operandi non possono essere contemporaneamente indirizzi in memoria e non \`e
+possibile specificare due operandi e una destinazione diversa. $<$size$>$ viene utilizzato per determinare la grandezza degli operandi: b per 8 bit, w per 16, l per 32,  
+q per 64. \`E opzionale quando uno dei due operandi \`e un registro, obbligatorio altrimenti. 
+\section{Istruzioni frequenti}
+A seguire un elenco delle istruzioni aritmetico-logiche più frequenti:
+\begin{itemize}
+\item mov per scambiare dati fra memoria e registri e viceversa (la destinazione non può essere un valore immediato);
+\item push e pop per leggere e salvare dati sullo stack, senza dover modificare lo stack pointer come avviene in MIPS;
+\item add (somma) e addc (somma con carry);
+\item sub (sottrazione) e subc (sottrazione con carry);
+\item mul (moltiplicazione con segno) e imul (moltiplicazione senza segno);
+\item div (divisione con segno) e idiv (divisione senza segno);
+\item inc (somma 1) e dec (sottrae 1);
+\item and, or, xor e not: operazioni logiche bit a bit;
+\item lea: load effective address;
+\item rcl, rcr, rol, ror: varie forme di rotate;
+\item sal, sar, shl, shr: shift aritmetico e logico;
+\item jmp: salto incondizionato;
+\item je (jump if equal), jnz (jump if not zero), jc (jump if carry), jnc (jump if not carry);
+\item neg;
+\item cmp: setta i flag facendo una sottrazione, ma senza salvarne il risultato;
+\item call e ret: indirizzo di ritorno sullo stack;
+\item nop;
+\item eventuali istruzioni condizionali.
+\end{itemize}
+\subsubsection{Load effective address}
+Nonoestante questa operazione sia stata implementata per calcolare indirizzi con indirizzamento diverso senza effettuare accessi, risulta utile per effettuare la somma
+tra due registri e salvare il risultato in un terzo: lea (\%rax, \%rbx), \%rcx. Nonostante la sintassi sia simile a quella di un indirizzamento non lo si sta 
+effettuando.
+\subsubsection{Incremento e decremento}
+Utilizzate invece di add in quanto permettono di risparimiare 16 bit sull'operazione.  

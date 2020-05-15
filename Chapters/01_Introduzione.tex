@@ -1,0 +1,76 @@
+\chapter{Introduzione}
+\section{Tipi di calcolatori}
+I calcolatori vengono raggruppati in quattro classi:
+\begin{itemize}
+\item Personal computer: offrono buone prestazioni per un singolo utente mantenendo il costo limitato. Tipicamente eseguono software di terze parti.
+\item Server: calcolatori di dimensioni maggiori orientati verso l'elaborazione di grandi carichi di lavoro come applicazioni scientifiche o per il web.Tipicamente eseguono 
+software di terze parti personalizzato. Stesse tecnologie dei personal computer ma con maggiore potenza di calcolo, maggiore velocit\`a di input-output e maggiore capacit\`a di
+memoria. Estremamente affidabili.
+\item Sistemi embedded: microprocessori progettati per l'esecuzione di applicazioni collegate tra loro implementate con l'hardware. Hanno prestazioni limitate.
+\item Dispositivi mobili: si basano su alimentazione a batteria e tecnologie wireless e solitamente i programmi vengono eseguiti in parte su di essi e in parte su appositi 
+server dedicati al cloud computing.
+\end{itemize}
+\section{Esecuzione di un programma}
+Il calcolatore \`e in grado di eseguire solamente istruzioni di basso livello semplici e passare da un'applicazione complessa alle semplici istruzioni \`e un processo che \\
+coinvolge interpretatori e traduttori che dalle operazioni definite ad alto livello ottengono le istruzioni macchina. Questa gerarchia di operazioni viene divisa in tre 
+componenti secondo questa gerarchia:
+\begin{enumerate}
+\item l'hardware: il calcolatore fisico che esegue le istruzioni.
+\item Il sistema operativo che gestisce la base dell'input-ouput, alloca spazio nelle memorie e consente il multi-tasking.
+\item Le applicazioni.
+\end{enumerate}
+\subsection{Da linguaggio ad alto livello a linguaggio macchina}
+Per comunicare con una macchina elettronica \`e necessario inviare segnali elettrici (acceso o spento) rappresentati dai numeri $0$ e $1$, che composti formano sequenze di 
+numeri binari dei quali ogni cifra \`e detta bit. Un'istruzione \`e pertanto una stringa di bit. Per semplificare il processo di scrittura venne creata una notazione in grado 
+di tradurre da un linguaggio di pi\`u facile comprensione a queste stringhe, in questo modo \`e il compilatore stesso a programmare il compilatore. Il primo di questi 
+programmi fu chiamato assembler. Se la sequenza di bit viene chiamato linguaggio macchina questa nuova notazione viene chiamata linguaggio assembler. Questa traduzione puntuale
+rimaneva ancora di difficile comprensione, vennero creati pertanto linguaggi di programmazione ad alto livello, con particolari compilatori (o interpreti) in grado di tradurrre
+questi linguaggi in linguaggio macchina. Questi ultimi pertmettono un incremento di produttivit\`a (condensano pi\`u operazioni) e l'indipendenza dal particolare calcolatore 
+sul quale vengono sviluppati. Alcuni compilatori eliminano lo stadio intermedio tra linguaggio di alto livello, assembler e macchina. 
+\section{Componenti di un calcolatore}
+L'hardware di un calcolatore acquisice dati, li elebora e fornisce il risultato. \`E dotato pertanto di dispositivi di input per la ricezione e di ouptut per l'invio, un'unit
+\`a per l'elaborazione dei dati e un'unit\`a di controllo. La parte che esegue le operazioni \`e detta CPU ed \`e formata dalle ultime due parti responsabili per le operazioni
+logico-matematiche e per lo spostamento inerno dei dati. La memoria invece \`e il luogo in cui venfono slavati i programmi e i loro dati, costituita da CHIP di DRAM (memoria
+dinamica ad accesso casuale). All'interno del processore \`e presente una memoria cache piccola ma veloce che agisce da buffer per la memoria pi\`u grande, costruita di SRAM.
+Per permettere l'esecuzione di istruzioni macchina \`e inoltre presente un'interfaccia tra linguaggio di basso livello e hardware: l'architettura dell'insieme di istruzioni, 
+checontiene tutte le istruzioni che permettono al calcolatore di funzionare, in modo da evitare al programmatore questo lavoro. Questa architettura \`e indipendente dall'hardware che la implementa, che ne realizza la descrizione. Architettura e sistema operativo costituiscono l'interfaccia binaria delle applicazioni. 
+\subsection{Salvare i dati}
+La memoria utilizzata per memorizzare i programmi in esecuzione viene detta memoria primaria, \`e volatile e costituita da DRAM. La memoria secondaria, o memoria di massa, 
+salva i dati tra un'esecuzione e un'altra, non volatile. Esistono vari tipi di memoria di massa come gli hard disk, o memorie flash a semiconduttore.
+\subsection{Comunicazione tra calcolatori}
+Il collegamento alla rete ha permesso la condivisione di dati e risorse tra diversi calcolatori attraverso la tecnologia ethernet per le LAN, a fibra per le WAN e wireless per 
+i dispositivi portatili. 
+\subsection{Produrre un chip}
+Un chip \`e formato da transistor su di un circuito integrato prodotto da un wafer di silicio che viene pi\`u volte mascherato, tagliato e "impacchettato". Il costo di un
+circuito integrato si pu\`o esprimere con il costo per piastrina: $\frac{\text{Costo per wafer}}{\text{Piatrine per wafer}\cdot\text{Rendimento}}$, le piastrine per wafer:
+$\frac{\text{Superficie del wafer}}{\text{SUperfiie della piastrina}}$ e rendimento: $\frac{1}{1+(\text{Difetti per area}\cdot\frac{\text{Area della piastrina}}{2})}$.
+\section{Le prestazioni}
+Le prestazioni di un calcolatore dipendono da come viene utilizzato: un utente singolo vorr\`a migliorare il tempo di esecuzione, mentre il gestore di un centro di calcolo il
+throughput, ovvero il numero di task nell'unit\`a di tempo. In molti casi sono codipendenti. Tenedo conto del tempo di esiscuzione si avr\`a che $Prestaziono=\frac{1}{
+\text{Tempo di esecuzione}_X}$. Per controllare quantitativamente le prestazioni di due calcolatori si far\`a il loro prodotto. Le prestazioni di un calcolatore si misurano nel 
+tempo totale richiesto ad un calcolatore per completare una task. Siccome i calcolatori lavorano in condizione di condivizione di risorse il sistema potrebbe cercare di 
+massimizzare il troughput mettendo in pausa il programma. Si considerer\`a pertanto anche il tempo di CPU, ovvero il tempo effettivamente speso dalla CPU per risolvere il 
+programma, che pu\`o essere a sua volta diviso tra tempo di CPU utente (per svolgere il programma) e in quello di sistema necessario per eseguire le funzioni del sistema 
+operativo. Per rendere pi\`u facile predirre il tempo di esecuzione di un programma si esprime la velocit\`a con cui il processore esegue le istruzioni e attraverso il ciclo
+di clock, un segnale periodico per la sincronizzazione delle funzioni implementate nell'hardware. 
+\subsection{Prestazione della CPU}
+Il tempo di CPU relativo ad un programma si calcola come il prodotto tra i cicli di clock relativi ad esso e il periodo di clock, o il primo diviso la frequenza di clock.
+\subsection{Prestazione delle istruzioni}
+Il tempo di esecuzione di un programma dipende dal numero di istruzioni che il calcolatore dovr\`a eseguire. Il tempo di esecuzione totale pu\`o perci\`o venire espresso come
+il prodotto tra il numero di istruzioni da eseguire e il tempo medio di esecuzione di ciascuna istruzione. Il numero di cicli di clock per eseguire il programma sar\`a
+il numoer di istruzioni del programma per il numero medio di cicli di clock per istruzione (CPI).
+\subsection{Misura delle prestazioni}
+Si pu\`o pertanto esprimere il tempo di CPU come:
+\begin{equation}
+\text{Tempo di CPU}=\frac{\text{Numero di istruzioni}\cdot\text{CPI}}{\text{Frequenza di clock}}
+\end{equation}
+Che evidenziano i tre fattori che influenzano le prestazioni. Essendo che il CPI varia da programma a programma risulta sempre difficile determinare le prestazioni in maniera 
+univoca.
+\section{La barriera dell'energia}
+L'aumento della frequenza di clock e della potenza elettrica assorbita sono aumentate di pari passo fino a che \`e diventato impossibile dissipare il calore generato dalla CPU.
+A questo punto si \`e ridotta riducendo la tensione di alimentazione, processo a cui si \`e arrivato ad un limite in quanto diminuendola si aumenta la dispersione di corrente, 
+rendendolo pertanto svantaggioso. L'assorbimento di potenza si \`e pertanto rivelato una barriera invalicabile. Essendo infatti la potenza richiesta met\`a del prodotto tra
+il carico capacitivo, il quadrato della tensione e la frequenza di commutazione. 
+\section{Sisitemi multiprocessore}
+Per migliorare le prestazioni si \`e passati a creare microprocessori contenenti pi\`u processori o core. Questo procedimento presenta problemi nel suo utilizzo in quanto ora
+\`e necessario bilangiare il carico di lavoro tra tutti i core e ridurre il loro tempo di comunicazione e sincronizzazione. 

@@ -1,0 +1,34 @@
+\chapter{La pipeline}
+Si \`e notato come compiere un'operazione per ciclo di clock \`e inefficiente, pertanto si utilizza una pipeline. Si noti come le istruzioni del MIPS hanno 5 fasi 
+di esecuzione: prelievo dell'istruzione dalla memoria, lettura dei registri e decodifica dell'istruzione, esecuzione di un'istruzione o calcolo di un indirizzo, accesso
+a un operando nella memoria dati, scrittura del risultato in un registro, verr\`a utilizzata pertanto una pipeline a 5 stadi. In una pipeline quando un istruzione termina
+l'utilizzo di un elmento funzionale questo viene subito occupato dall'istruzione successiva. 
+\subsubsection{Confronto di prestazione}
+Il confronto pu\`o essere fatto come tempo fra due istruzioni=$\frac{Tempo\ tra\ due\ istruzioni\ senza\ pipeline}{numero\ stadi\ della\ pipeline}$.
+\section{Vantaggi del RISC}
+\begin{enumerate}
+\item Essendo tutte le istruzioni della stessa lunghezza il prelievo \`e pi\`u facile.
+\item Essendo i codici degli operandi in posizione fissa ci si pu\`o accedere leggendo il register file in parallelo con la decodifica dell'istruzione.
+\item Gli operandi residienti in memoria sono utilizzabili solo da sw e lw, pertanto si pu\`o utilizzare la ALU per calcolare gli indirizzi. .
+\item L'uso di accessi allineati permette agli accessi in memoria di avvenire in un solo ciclo impegnando un solo stadio della pipeline. 
+\end{enumerate}
+\section{Hazard}
+In condizioni normali la pipeline permette di eseguire un'operazione per ciclo di clock, ma ci sono dei casi in cui questo non \`e possibile per il verificarsi di 
+condizioni critiche.
+\subsection{Hazard strutturali}
+L'architettura del calcolatore rende impossibile l'esecuzione di alcune istruzioni in pipeline, ad esempio, disponendo di un'unica memoria non \`e possibile caricare 
+istruzioni e prelevare operandi nello stesso ciclo di clok.
+\subsection{Hazard sui dati}
+Si verifica quando la pipeline deve essere messa in stallo per ottenere informazioni dagli stadi precedenti, come somme che utilizzando gli stessi operandi. Questo 
+tipo di hazard blocca la pipeline per tre cicli di clock.
+\subsubsection{Possibili soluzioni}
+\begin{itemize}
+\item In certi casi si pu\`o eliminare il problema a livello di compilatore invertendo delle istruzioni.
+\item \`E utile osservare come non \`e necessario salvare il risultato, attraverso un operazione di operand forwarding o propagazione, in cui il risultato viene reso 
+disponibile bypassando l'operazione di storage.
+\end{itemize}
+\subsection{Hazard sul controllo}
+Si verifica in presenza di salti condizionati, supponendo di avere un circuito sofisticato che permette di calcolare l'indirizzo di salto si necessita comunque di saltare
+uno o due cicli. Se la pipeline \`e troppo lunga questo stallo diventa troppo costoso. Vengono pertanto implementati dei circuiti che prevedano dei salti e fanno delle 
+assunzioni su di essi, mettendo le operazioni nella pipeline in base ad esse e poi, se necessario si corregge. Si pu\`o considerare che il salto non venga utilizzato, 
+o che il comportamento rimanga costante per esempio. 

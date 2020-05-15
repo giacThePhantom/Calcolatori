@@ -1,0 +1,64 @@
+\chapter{Input-output}
+I dispositivi di I/O sono necessari al computer per comunicare con l'esterno, devono essere espandibili ed eterogenei. La tipologia di prestazione varia dai casi: 
+nel caso di tastiere e mouse interessa pi\`u la latenza, nel caso di dischi o interfacce di rete interessa pi\`u il throughtput. Questi dispositivi sono collegati al
+processore da un dispositivo di comunicazione chiamato bus. I dispositivi i I/O possono essere classificati in base alle operazioni che compiono: read o write, in base
+al loro partner (uomo o macchina) e in base alla velocit\`a di trasferimento. 
+\section{Connesione tra processori e periferiche}
+Le connessioni avvengono tramite delle strutture di comunicazione chiamate bus che si possono dividere in due categorie:
+\begin{enumerate}
+\item Bus processore-memoria, specializzato, corto e veloce.
+\item Bus I/O, possono essere lunghi e permettere la connessione con periferiche eterogenee, tipicamente non sono collegati direttamente alla memoria ma richiedono un
+bus processore-memoria o un bus di sistema.
+\end{enumerate}
+Se prima era presente un unico bus parallelo che collegava tutto, ora per problemi di clock e frequenze troppo elevate si usano architetture composte da pi\`u bus 
+paralleli condivisi e bus seriali punto-punto. Si indicher\`a con transizione I/O invio di indirizzo e spedizione o ricevimento di dati, con input il trasferimento di 
+dati da una periferica verso una memoria dove il processore pu\`o leggerla, con output il trasferimento di dati dalla memoria al dispositivo. 
+\subsection{Bus sincrono}
+Tra le linee di controllo di questo bus esiste un clock e le comunicazioni avvengono con un protocollo collegato al il ciclo di clock. Questo tipo di bus \`e molto 
+semplice da implementare e molto veloce, ma presenta poca robustezza al drift del clock e necessita che tutte le periferiche vadano alla velocit\`a del clock. 
+\subsection{Bus asincrono}
+Per rimediare agli inconvenienti del bus sincrono si utilizza il bus asincrono, in cui tutte le transazioni sono governate da una serie di handshake e non pi\`u dal 
+clock. Questo richiede l'introduzione di nuove linee di controllo per segnalare inizio e fine di transazioni ma permette di collegare periferiche con velocit\`a diversa. 
+Questo tipo di bus \`e robusto rispetto ai ritardi e consente di comunicare con periferiche di tipo diverso, ma \`e lento nelle connessioni in quanto richiede diversi 
+segnali di controllo che devono circolare per permettere il passaggio di informazioni, la circuiteria di controllo \`e inoltre complessa. Si utilizzano spesso tecnologie
+ibride, ma prevalentemente asincrone. Il trend pi\`u recente \`e quello di implementare all'interno del processore gli hub per il controllo di I/O e della memoria. 
+\section{Prospettiva del programmatore}
+Al programmatore interessa come trasformare una richiesta di I/O in un comando per la periferica e come trasferire i dati. Riguardo al sistema operativo occorre 
+osservareche i programmi che condividono il processore condividono anche il sistema di I/O, i trasferimenti dati utilizzano delle interrupt che impattano le funzionalit
+\`a del SO, devono pertanto essere eseguiti in una modalit\`a del processore detta supervisor cui solo il codice kernel pu\`o accedere, il controllo di I/O si interseca 
+con problematiche di concorrenza. Un sistema operativo deve garantire che un utente con i permessi possa accedere ai sistemi di I/O cui pu\`o accedere, deve fornire 
+comandi di alto livello per gestire operazioni di basso livello, gestire le interruzioni generate dall' I/O, ripartire l'accesso a un dispositivo tra i programmi che lo 
+richiedono. Per implementare tali funzionalit\`a occorre rendere possibile al SO di inviare comandi alle periferiche, rendere possibile ai dispositivi notificare il 
+corretto avvenimento di un'operazione, consentire trasferimenti diretti tra dispositivi e memoria. Questo si fa fornendo sulle relative linee di bus delle parole di 
+controllo scrivendo o leggendo in particolari locazioni di memoria (memory mapped I/O) o tramite delle istruzioni speciali legate all'I/O. Scrivendo una particolare 
+parola in una locazione di memoria associata al dispositivo il sistema di memoria ignora la scrittura e il controllore di I/O intercetta l'indirizzo particolare e 
+trasmette il dato al dispositivo sotto forma di comando. Queste particolari locazioni di memoria sono inaccessibili ai programmi utante ma solo al sistema operativo,
+pertanto deve esserci una chiamata di sistema che faccia commutare il processore in modalit\`a supervisore. Il dispositivo pu\`o utilizzare queste locazioni per 
+trasmettere dati o pre-segnalare il suo stato. 
+\section{Trasmettere o ricevere dati}
+Per trasferire dati la maniera pi\`u semplice \`e l'attesa attiva o polling: si manda un comando di lettura scrittura alla periferica e si fa un ciclo di attesa testando
+il bit di stato per vedere quando il dispositivo \`e pronto.
+\subsubsection{Costo del polling}
+Percentuale del processore utilizzata dal polling: prodotto tra frequenza di operazione e clock utilizzati dall'operazione di polling diviso la frequenza del processore.
+\subsection{Considerazioni}
+L'attesa attiva fa perdere tempo al processore che si dedica a cicli di lettura inutili, pu\`o pertanto essere utilizzato quando le operazioni avvengono con velocit\`a
+determinata e se i dati vengono trasferiti con bitrate elevati il ciclo di attesa attiva dura poco. Se lo spreco \`e inaccettabile viene utilizzato I/O a interruzione
+di programma (interrupt driven I/O). 
+\subsection{Interruzioni di programma}
+Un'interruzione I/O \`e un segnale utilizzato per segnalare al processore che la periferica \`e pronta a eseguire il trasferimento richiesto, possono avere diverso grado
+di urgenza e occorre un modo per segnalare al processore quale periferica richiede l'interruzione. Questo tipo di interruzioni sono sempre asincrone rispetto 
+all'esecuzione delle istruzioni. Quando arriva un'interruzione l'istruzione corrente viene terminata prima di considerare l'interruzione. Si pu\`o differire l'esecuzione
+di un programma a un altro momento. Con questo metodo non occorre interrompere l'esecuzione del programma se non quando il dato pu\`o essere effettivamente riferito in
+memoria, ma si necessita di hardware speciale per interrompere l'esecuzione del programma per permettere alle periferiche di generare un'interruzione e per rilevare 
+l'istruzione, salvare lo stato del processore per esegure una routine di servizio (Interrupt Service Routine ISR) e poi riprendere dal punto dove si era interrotto. Il 
+guadagno rispetto al polling \`e che l'overhead necessario alla lettura dei dati viene pagato solo quando il dato \`e effettivamete presente. 
+\section{Eccezioni}
+Un'eccezione \`e un trasferimento del controllo del programma non programmato. Il sistema effettua delle azioni per gestire le eccezioni, ome per esempio deve sapere
+dove registrare il punto di interruzione e dove salvare lo stato e poi, ad eccezione finita, come riprendere dal punto immediatamente successivo al punto di 
+interruzione. 
+\subsection{Interrupts}
+Sono eccezioni causate da eventi esterni, sono asincrone, possono essere gestite nello spazio tra due istruzioni, sospendono il programma e riprendono dallo stato in
+cui si era interrotto. 
+\subsection{Traps}
+Sono eccezioni causate da eventi interni al programma, sincrone, gestite da un trap handler \`e possibile riprovare a eseguire l'istruzione che ha generato l'istruzione
+o abortire il programma. 

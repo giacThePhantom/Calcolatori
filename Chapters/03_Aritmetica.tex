@@ -1,0 +1,29 @@
+\chapter{Aritmetica dei calcolatori}
+\section{La codifica}
+Una sequenza di zeri e uni viene utilizzata per rappresentare numeri, caratteri, programmi, immagini e suoni. Questi vengono distinti e riconosciuti attraverso una codifica.
+\subsection{Codifica dei naturali}
+Viene utilizzata la base due per rappresentare i numeri da $0$ a $2^{k-1}$. La sua conversione in base $16$ consiste nel prendere gruppi di quattro bit e trasformarli nella 
+cifra corrispondente in base sedici e viceversa. Per convertire da base $10$ si fa la divisione intera e il resto \`e la cifra da porre a sinistra del numero. Per moltiplicare
+per una potenza $n$ di due faccio lo shift a sinistra di $n$ cifre. 
+\subsection{Codifica degli interi}
+Per codificare i numeri negativi possono venire utilizzate le codifiche:
+\begin{itemize}
+\item Modulo e segno.
+\item Complemento a 1.
+\item Complemento a 2.
+\end{itemize}
+\subsubsection{Modulo e segno}
+Il bit pi\`u significativo viene utilizzato per codificare il segno $1$ se negativo. Pone dei problemi di efficienza e presenta pi\`u zeri.
+\subsubsection{Complemento a 1}
+Questa codifica si ottiene invertendo gli zeri con gli uni e viceversa. Contiene comunque due zeri, ma gli algoritmi di somma sono pi\`u veloci: facco la somma bit a bit
+e sommo il riporto della cifra pi\`u significativa. Il risultato \`e attendibile se i riporti delle ultime due cifre sono uguali.
+\subsubsection{Complemento a 2}
+Per ottenere il complemento a due scorro il numero dal bit meno significativo e comincio a invertire il valore dopo aver incontrato il primo $1$, o sommando $1$ al complemento 
+a 1. In questo modo si ottiene una codifica unica dello zero. L'overflow si verifica quando l'ultimo bit di segno \`e in disaccordo con il risultato dell'operazione.
+\subsection{Codifica dei reali}
+\subsubsection{Virgola fissa}
+Si pone un punto in cui i bit meno significativi rappresentano la parte decimale. Per cambiare di base la parte decimale moltiplico ricorsivamente per due per quante cifre 
+contiene la parte decimale e considero la parte intera. 
+\subsubsection{Virgola mobile}
+Un numero reale pu\`o essere rappresentato, analogalmente alla notazione scientifica come un numero compreso tra 1 e 2 moltiplicato per un esponente della sua base. Con questa
+codifica il bit pi\`u significativo rappresenta il segno, 8 bit sono dedicati all'esponente in complemento a 2 e i restanti dedicati alla mantissa. 
